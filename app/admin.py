@@ -12,7 +12,35 @@ def afterHospitalSave(signal, instance, **kwargs):
     service.save()
 
 
+class ServiceAdmin(admin.ModelAdmin):
+    model = Service
+    list_display = ['hospital',
+                    'oxygen_beds',
+                    'oxygen_cylinder',
+                    'ventilator',
+                    ]
+
+    def oxygen_beds(self, object):
+        return f'{object.oxygen_beds_available}/{object.oxygen_beds_total}'
+
+    def oxygen_cylinder(self, object):
+        return f'{object.oxygen_cylinder_available}/{object.oxygen_cylinder_total}'
+
+    def ventilator(self, object):
+        return f'{object.ventilator_available}/{object.ventilator_total}'
+
+
+class HospitalAdmin(admin.ModelAdmin):
+    model = Hospital
+    list_display = ['name', 'phone', 'address', 'city']
+
+
+class CityAdmin(admin.ModelAdmin):
+    model = City
+    list_display = ['name', 'state']
+
+
 admin.site.register(State)
-admin.site.register(City)
-admin.site.register(Hospital)
-admin.site.register(Service)
+admin.site.register(City, CityAdmin)
+admin.site.register(Hospital, HospitalAdmin)
+admin.site.register(Service, ServiceAdmin)
