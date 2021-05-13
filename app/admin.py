@@ -14,6 +14,14 @@ def afterHospitalSave(signal, instance, **kwargs):
         availibility.save()
 
 
+@receiver(post_save, sender=Facility)
+def afterFacilitySave(signal, instance, **kwargs):
+    hospitals = Hospital.objects.all()
+    for hospital in hospitals:
+        availibility = Availability(hospital=hospital, facility=instance)
+        availibility.save()
+
+
 class FacilityAdmin(admin.ModelAdmin):
     model = Facility
     list_display = ['title']
